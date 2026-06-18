@@ -44,6 +44,7 @@ Ultimate Slides gives AI agents a complete generation and publishing path:
    - document API
    - PPTX export
    - PDF export
+7. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
 
 The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
 
@@ -193,7 +194,11 @@ Published to Lumina:
 - Document API: <api_document URL>
 - PPTX export: <export_pptx URL>
 - PDF export: <export_pdf URL>
+
+I can also download this presentation for you into `slides/` as PPTX or PDF. Tell me which format you want.
 ```
+
+The download is not automatic. If the user asks for it, the agent should create `slides/`, download from Lumina, and report the saved local file path.
 
 ## Live Smoke Test
 

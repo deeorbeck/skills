@@ -22,7 +22,13 @@
     {
       "id": 4,
       "prompt": "Make a polished 8-slide investor-style presentation about an AI sales assistant. Use a dark premium SaaS look, generate all slide HTML/CSS yourself, then publish it to Lumina.",
-      "expected_output": "The agent reads the generation workflow, applies Slaydplus design/content/creative prompt guidance, creates editable professional slide HTML/CSS, publishes to Lumina, and returns all URLs.",
+      "expected_output": "The agent reads the generation workflow, applies Slaydplus design/content/creative prompt guidance, creates editable professional slide HTML/CSS, publishes to Lumina, returns all URLs, and offers to download PPTX or PDF into slides/ if the user wants.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "The Lumina preview looks good. Please download it as a PDF for me.",
+      "expected_output": "The agent creates a slides/ folder if needed, downloads the Lumina PDF export to that folder, and reports the saved local path.",
       "files": []
     }
   ]

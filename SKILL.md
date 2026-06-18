@@ -57,6 +57,7 @@ If there is no API key, register the agent first using `POST /api/agents/registe
 8. Use hosted image URLs for images.
 9. Publish with `POST /api/agent/presentations`.
 10. Return the Lumina URLs to the user.
+11. Offer to download the deck as PPTX or PDF into a local `slides/` folder if the user wants it.
 
 ## API Reference
 
@@ -101,6 +102,28 @@ curl -X POST "$LUMINA_API_BASE_URL/api/agent/presentations" \
   -d @presentation.json
 ```
 
+## Optional Download Offer
+
+After publishing, always offer a download as the next optional step. Do not download automatically unless the user explicitly asks.
+
+Use this wording pattern:
+
+```markdown
+I can also download this presentation for you into `slides/` as PPTX or PDF. Tell me which format you want.
+```
+
+If the user asks for a download:
+
+1. Create `slides/` in the current working directory if it does not exist.
+2. Use the Lumina export URL returned by the publish response:
+   - PPTX: `urls.export_pptx`
+   - PDF: `urls.export_pdf`
+3. Download the file into `slides/`.
+4. Use a clear filename based on the title, for example `slides/ai-sales-assistant.pptx`.
+5. Tell the user the saved local path.
+
+If direct export URLs are slow or return an async status response, use the async export flow documented in `references/api.md`.
+
 ## Output Format
 
 After publishing, respond with:
@@ -112,6 +135,8 @@ Published to Lumina:
 - Document API: <api_document URL>
 - PPTX export: <export_pptx URL>
 - PDF export: <export_pdf URL>
+
+I can also download this presentation for you into `slides/` as PPTX or PDF. Tell me which format you want.
 ```
 
 Include the deck UUID and slide count when useful.

@@ -104,6 +104,41 @@ curl "$LUMINA_API_BASE_URL/api/agent/me" \
   -H "X-Lumina-Agent-Key: $LUMINA_AGENT_API_KEY"
 ```
 
+## Download Exports
+
+After publishing, Lumina returns direct export URLs:
+
+- `urls.export_pptx`
+- `urls.export_pdf`
+
+Do not download automatically. Offer the user a download first. If the user asks, save the selected format into a local `slides/` folder.
+
+```bash
+mkdir -p slides
+curl -L "<export_pptx URL>" -o "slides/presentation.pptx"
+curl -L "<export_pdf URL>" -o "slides/presentation.pdf"
+```
+
+If the direct export endpoint returns an async task instead of a file, use:
+
+```http
+POST /api/documents/{uuid}/export/start?export_type=pptx
+POST /api/documents/{uuid}/export/start?export_type=pdf
+GET /api/export/status/{task_id}
+```
+
+When the status is `completed`, download the returned `file_url`:
+
+```bash
+curl -L "$LUMINA_API_BASE_URL<file_url>" -o "slides/presentation.pptx"
+```
+
+Report the saved path to the user, for example:
+
+```text
+Saved: slides/ai-sales-assistant.pptx
+```
+
 ## Limits
 
 - Slides per request: 1-50
