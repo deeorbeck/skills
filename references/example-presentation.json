@@ -1,0 +1,34 @@
+{
+  "title": "AI Agents in Customer Support",
+  "topic": "How AI agents improve support operations",
+  "language": "en",
+  "theme_css": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap'); .slide { font-family: Inter, sans-serif; }",
+  "fonts_url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap",
+  "design_data": {
+    "style": "executive",
+    "colors": {
+      "primary": "#2563eb",
+      "background": "#0f172a",
+      "text": "#ffffff"
+    }
+  },
+  "metadata": {
+    "example": true
+  },
+  "slides": [
+    {
+      "title": "Title",
+      "slide_type": "title",
+      "html": "<div class=\"slide\"><div class=\"kicker\" data-field=\"kicker\" contenteditable=\"true\">Operations Brief</div><h1 data-field=\"title\" contenteditable=\"true\">AI Agents in Customer Support</h1><p data-field=\"subtitle\" contenteditable=\"true\">A practical model for faster, more consistent service.</p></div>",
+      "css": ".slide { width: 1920px; height: 1080px; background: #0f172a; color: white; display: flex; flex-direction: column; justify-content: center; padding: 120px 160px; } .kicker { color: #93c5fd; font-size: 34px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 32px; } h1 { font-size: 118px; line-height: 1.02; max-width: 1320px; margin: 0 0 36px; } p { font-size: 44px; line-height: 1.25; color: #cbd5e1; max-width: 1120px; }",
+      "speaker_notes": "Introduce the business outcome before showing implementation details."
+    },
+    {
+      "title": "Operating Model",
+      "slide_type": "content",
+      "html": "<div class=\"slide\"><h2 data-field=\"title\" contenteditable=\"true\">A three-layer support model</h2><div class=\"grid\"><div><strong>Intake</strong><span>Classify requests and enrich context.</span></div><div><strong>Resolution</strong><span>Draft answers, execute workflows, and escalate edge cases.</span></div><div><strong>Learning</strong><span>Feed outcomes back into policies and knowledge bases.</span></div></div></div>",
+      "css": ".slide { width: 1920px; height: 1080px; background: #f8fafc; color: #0f172a; padding: 110px 130px; } h2 { font-size: 86px; margin: 0 0 80px; max-width: 1150px; } .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; } .grid div { min-height: 420px; border: 2px solid #dbeafe; background: white; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; } strong { font-size: 42px; color: #2563eb; } span { font-size: 32px; line-height: 1.35; color: #334155; }",
+      "speaker_notes": "Explain the layers as a system, not as isolated features."
+    }
+  ]
+}
