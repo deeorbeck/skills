@@ -53,3 +53,6 @@ Check every slide for:
 - One clear message.
 - Editable text fields.
 - Valid hosted image URLs if images are used.
+- Every image URL was searched and validated before insertion.
+- Every `<img>` has descriptive `alt` text and `onerror="this.style.display='none'"`.
+- No private, local, login-protected, guessed, or broken image URL appears in the HTML.

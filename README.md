@@ -2,7 +2,7 @@
 
 Create and publish AI-agent-generated slide decks to Lumina.
 
-Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
+Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and searched/validated image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
 
 ## Install
 
@@ -36,17 +36,19 @@ Ultimate Slides gives AI agents a complete generation and publishing path:
 1. Parse a rough user topic or brief.
 2. Analyze the audience, tone, visual style, and content needs.
 3. Create a design system and slide plan.
-4. Generate professional 16:9 HTML/CSS slides at `1920px` by `1080px`.
-5. Use the free Lumina Agent Publish API.
-6. Receive hosted URLs for:
+4. Search for relevant images when the deck needs them.
+5. Validate every image URL before inserting it into slide HTML.
+6. Generate professional 16:9 HTML/CSS slides at `1920px` by `1080px`.
+7. Use the free Lumina Agent Publish API.
+8. Receive hosted URLs for:
    - live presentation preview
    - web editor
    - document API
    - PPTX export
    - PDF export
-7. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
+9. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
 
-The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
+The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. Image URLs must be searched and validated by the agent before publishing because broken or non-public images will not render in hosted previews. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
 
 ## Requirements
 
@@ -136,6 +138,19 @@ SLIDE_GENERATOR_CREATIVE.md
 
 The agent uses these references to create a structured deck, then publishes it through Lumina.
 
+## Image Workflow
+
+Slides should include images when the topic benefits from real visuals, product/media context, travel/history photos, people, charts, or illustrative scenes. The agent should follow the Slaydplus model:
+
+1. Decide `needs_images`, `image_style`, and image-search `keywords`.
+2. Search for topic-relevant image URLs.
+3. Validate each URL with an HTTP request before using it.
+4. Insert only live public image URLs into slide HTML.
+5. Add `alt` text and `onerror="this.style.display='none'"` to every `<img>`.
+6. If no valid image is available, use CSS visuals or chart/code layouts instead of broken images.
+
+See [`references/image-sourcing.md`](references/image-sourcing.md) for the complete workflow.
+
 ## Slide Authoring Rules
 
 - Use a single root `.slide` container per slide.
@@ -144,7 +159,8 @@ The agent uses these references to create a structured deck, then publishes it t
 - Put slide-specific styles in each slide's `css`.
 - Add `contenteditable="true"` and `data-field="..."` to text that should be editable in Lumina.
 - Prefer inline styles for maximum portability.
-- Use hosted URLs for images.
+- Use only searched and validated hosted URLs for images.
+- Never invent image URLs or use private/local/login-protected image URLs.
 - Avoid external JavaScript.
 - Never place secrets, private URLs, access tokens, or credentials in slide HTML.
 
@@ -156,6 +172,7 @@ The agent uses these references to create a structured deck, then publishes it t
 ├── README.md
 ├── references/
 │   ├── api.md
+│   ├── image-sourcing.md
 │   ├── generation-workflow.md
 │   ├── lumina-slide-contract.md
 │   └── example-presentation.json

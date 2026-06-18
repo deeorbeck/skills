@@ -87,7 +87,15 @@ Every slide should have:
 - editable text fields
 - image search context if an image is needed
 
-### 6. Generate HTML/CSS
+### 6. Source And Validate Images
+
+If `STEP_1_DEEP_ANALYSIS.md` returns `needs_images: true`, read `references/image-sourcing.md` before writing final HTML.
+
+Use the analysis `keywords` to search for relevant images. Validate each candidate URL with an HTTP check, follow redirects, and accept only public `2xx` image responses. Reject broken, private, login-gated, local, guessed, or `text/html` URLs.
+
+Pass only validated image URLs into the slide-code generation step. This matches the Slaydplus rule: use provided image URLs only, never invent URLs. If no valid URL is available, generate the slide without `<img>` and use CSS visuals instead.
+
+### 7. Generate HTML/CSS
 
 Use `SLIDE_GENERATOR_CREATIVE.md` as the main slide-code standard.
 
@@ -95,7 +103,7 @@ Important adaptations for Lumina:
 
 Read `references/lumina-slide-contract.md` before publishing. It adapts the Slaydplus creative prompt output to the exact Lumina Agent Publish API contract.
 
-### 7. Publish To Lumina
+### 8. Publish To Lumina
 
 After generating all slide objects, publish with `POST /api/agent/presentations`.
 
@@ -124,5 +132,6 @@ Before publishing, inspect the deck against this checklist:
 - Text is readable at presentation distance.
 - No slide has clipped text or overflow.
 - Editable text has `contenteditable="true"` and `data-field`.
-- Images, if used, are hosted URLs.
+- Images, if used, were searched, validated, and inserted as hosted URLs.
+- No image URL is hallucinated, private, local, expired, or broken.
 - No secrets or private URLs appear in the HTML.
