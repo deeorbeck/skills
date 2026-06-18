@@ -1,8 +1,8 @@
 # Ultimate Slides
 
-Publish AI-agent-generated slide decks to Lumina.
+Create and publish AI-agent-generated slide decks to Lumina.
 
-Ultimate Slides is a reusable agent skill for turning structured HTML/CSS slide code into hosted presentation URLs. Your agent creates the slide content, layout, code, and image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
+Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
 
 ## Install
 
@@ -31,18 +31,21 @@ npx skills use deeorbeck/skills --skill ultimate-slides
 
 ## What It Does
 
-Ultimate Slides gives AI agents a clean publishing path:
+Ultimate Slides gives AI agents a complete generation and publishing path:
 
-1. Build slides as 16:9 HTML/CSS at `1920px` by `1080px`.
-2. Use the free Lumina Agent Publish API.
-3. Receive hosted URLs for:
+1. Parse a rough user topic or brief.
+2. Analyze the audience, tone, visual style, and content needs.
+3. Create a design system and slide plan.
+4. Generate professional 16:9 HTML/CSS slides at `1920px` by `1080px`.
+5. Use the free Lumina Agent Publish API.
+6. Receive hosted URLs for:
    - live presentation preview
    - web editor
    - document API
    - PPTX export
    - PDF export
 
-The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs.
+The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
 
 ## Requirements
 
@@ -116,6 +119,22 @@ Response:
 }
 ```
 
+## Generate From A Topic
+
+When a user asks for a full presentation from a topic, the skill instructs the agent to use the bundled Slaydplus prompt pipeline:
+
+```text
+STEP_0_REQUEST_PARSER.md
+STEP_1_DEEP_ANALYSIS.md
+STEP_2_DESIGN_GENERATION.md
+STEP_3_HTML_GENERATION.md
+STEP_4_CSS_GENERATION.md
+STEP_5_CONTENT_GENERATION.md
+SLIDE_GENERATOR_CREATIVE.md
+```
+
+The agent uses these references to create a structured deck, then publishes it through Lumina.
+
 ## Slide Authoring Rules
 
 - Use a single root `.slide` container per slide.
@@ -123,6 +142,7 @@ Response:
 - Put shared styles in `theme_css`.
 - Put slide-specific styles in each slide's `css`.
 - Add `contenteditable="true"` and `data-field="..."` to text that should be editable in Lumina.
+- Prefer inline styles for maximum portability.
 - Use hosted URLs for images.
 - Avoid external JavaScript.
 - Never place secrets, private URLs, access tokens, or credentials in slide HTML.
@@ -135,7 +155,10 @@ Response:
 ├── README.md
 ├── references/
 │   ├── api.md
+│   ├── generation-workflow.md
+│   ├── lumina-slide-contract.md
 │   └── example-presentation.json
+│   └── slaydplus-prompts/
 └── evals/
     └── evals.json
 ```
@@ -143,6 +166,10 @@ Response:
 ## API Reference
 
 Read [`references/api.md`](references/api.md) for the complete request schema, response schema, limits, and error handling.
+
+## Generation Reference
+
+Read [`references/generation-workflow.md`](references/generation-workflow.md) for the ideal presentation generation workflow and how the bundled Slaydplus prompts are used.
 
 ## Example Payload
 

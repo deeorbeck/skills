@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Create a 5-slide HTML presentation about AI agents in healthcare operations and publish it to Lumina. I have LUMINA_AGENT_API_KEY set in the environment.",
-      "expected_output": "The agent creates structured 1920x1080 HTML/CSS slides, calls the Lumina Agent Publish API, and returns preview, editor, document, PPTX, and PDF URLs.",
+      "expected_output": "The agent uses the bundled Slaydplus generation workflow, creates structured 1920x1080 HTML/CSS slides, calls the Lumina Agent Publish API, and returns preview, editor, document, PPTX, and PDF URLs.",
       "files": []
     },
     {
@@ -17,6 +17,12 @@
       "id": 3,
       "prompt": "We do not have a Lumina agent key yet. Register this integration as 'Research Deck Agent' and then explain how to store and use the key for future deck publishing.",
       "expected_output": "The agent calls the registration endpoint, warns that the key is shown once, and explains future authentication headers.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Make a polished 8-slide investor-style presentation about an AI sales assistant. Use a dark premium SaaS look, generate all slide HTML/CSS yourself, then publish it to Lumina.",
+      "expected_output": "The agent reads the generation workflow, applies Slaydplus design/content/creative prompt guidance, creates editable professional slide HTML/CSS, publishes to Lumina, and returns all URLs.",
       "files": []
     }
   ]
