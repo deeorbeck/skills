@@ -4,15 +4,21 @@ Use this reference whenever generated slides need photos, illustrations, icons, 
 
 Lumina does not search for or validate images. The agent must provide live, public image URLs before publishing slide HTML to Lumina.
 
+For full generated presentations, images are expected by default. A polished deck should not be all CSS cards, gradients, and decorative shapes unless the user explicitly requested a no-image style or the topic is truly image-hostile.
+
 ## Decision Flow
 
 1. Use `references/slaydplus-prompts/STEP_1_DEEP_ANALYSIS.md` to decide:
    - `needs_images`
    - `image_style`
    - 5-7 English `keywords`
-2. If `needs_images` is `false`, do not force images. Use CSS decoration, charts, icons, or clean visual structure.
-3. If `needs_images` is `true`, search for images before final HTML generation.
-4. Pass the validated image URLs into the slide-code step as the only allowed image inputs.
+2. Build an image plan before HTML generation:
+   - Title/opening slide: 1 strong hero image.
+   - Content slides: at least 2 additional relevant images across the deck.
+   - Visual topics: use more images where they improve comprehension.
+3. If `needs_images` is `false`, verify that the topic is truly abstract/code/theory or that the user asked for no images. Otherwise override it and include images.
+4. Search for images before final HTML generation.
+5. Pass the validated image URLs into the slide-code step as the only allowed image inputs.
 
 ## Search Requirements
 
@@ -87,6 +93,15 @@ Example:
 - If no validated URLs are available, generate the slide with no `<img>` tags.
 - Keep z-index between decoration and content, usually `z-index: 5` to `8`.
 
+## Minimum Image Gate
+
+Before publishing a generated deck, count images:
+
+- If there are zero `<img>` tags and the user did not explicitly request no images, do not publish yet.
+- If the deck has 5 or more slides, aim for at least 3 validated images across the deck.
+- If a valid image cannot be found, keep a note of the search/validation failure and use a CSS fallback only for that slide.
+- Do not let all slides fall back to CSS-only visuals unless image search is genuinely unavailable.
+
 ## Fallbacks
 
 If image search or validation fails:
@@ -98,6 +113,7 @@ If image search or validation fails:
 ## Pre-Publish Checklist
 
 - Each needed image was searched from topic-specific keywords.
+- A full generated deck has a hero image and at least two additional images unless there is a documented exception.
 - Each used image URL passed HTTP validation.
 - Each `<img>` has `alt` and `onerror`.
 - No `<img>` uses a local path, private URL, login-protected URL, or guessed URL.

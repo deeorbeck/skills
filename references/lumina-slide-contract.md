@@ -56,3 +56,4 @@ Check every slide for:
 - Every image URL was searched and validated before insertion.
 - Every `<img>` has descriptive `alt` text and `onerror="this.style.display='none'"`.
 - No private, local, login-protected, guessed, or broken image URL appears in the HTML.
+- For full generated decks, zero `<img>` tags is a failure unless the user explicitly asked for no images or image search genuinely failed.

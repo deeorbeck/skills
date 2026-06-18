@@ -164,11 +164,13 @@ If Lumina cannot be reached or the API key is missing/invalid, the agent should 
 Slides should include images when the topic benefits from real visuals, product/media context, travel/history photos, people, charts, or illustrative scenes. The agent should follow the Slaydplus model:
 
 1. Decide `needs_images`, `image_style`, and image-search `keywords`.
-2. Search for topic-relevant image URLs.
-3. Validate each URL with an HTTP request before using it.
-4. Insert only live public image URLs into slide HTML.
-5. Add `alt` text and `onerror="this.style.display='none'"` to every `<img>`.
-6. If no valid image is available, use CSS visuals or chart/code layouts instead of broken images.
+2. For full generated presentations, plan one hero image and at least two additional content-slide images by default.
+3. Search for topic-relevant image URLs.
+4. Validate each URL with an HTTP request before using it.
+5. Insert only live public image URLs into slide HTML.
+6. Add `alt` text and `onerror="this.style.display='none'"` to every `<img>`.
+7. If no valid image is available for a slide, use CSS visuals or chart/code layouts instead of broken images.
+8. Do not publish a generated deck with zero `<img>` tags unless the user explicitly requested no images or image search genuinely failed.
 
 See [`references/image-sourcing.md`](references/image-sourcing.md) for the complete workflow.
 
@@ -182,6 +184,7 @@ See [`references/image-sourcing.md`](references/image-sourcing.md) for the compl
 - Prefer inline styles for maximum portability.
 - Use only searched and validated hosted URLs for images.
 - Never invent image URLs or use private/local/login-protected image URLs.
+- For generated decks, include a hero image and at least two additional validated images unless there is a clear no-image exception.
 - Avoid external JavaScript.
 - Never place secrets, private URLs, access tokens, or credentials in slide HTML.
 

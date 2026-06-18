@@ -36,6 +36,12 @@
       "prompt": "Create an 8-slide deck about AI in daily life and publish it to Lumina. The runtime cannot register the Lumina agent because the API returns 403 / Cloudflare 1010.",
       "expected_output": "The agent does not finish with local PPTX/PDF/HTML files as the final result. It reports that Lumina publishing is blocked, names the 403 / 1010 blocker, and asks for a valid API key, reachable runtime/server, or explicit approval for local-only output.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Create a 10-slide presentation about the future of online education and publish it to Lumina.",
+      "expected_output": "The agent generates a hosted Lumina deck with validated real image URLs, including a hero image and at least two additional content-slide images. The final slide HTML contains img tags with alt text and onerror fallbacks; it must not publish a CSS-only deck unless image search genuinely fails and the failure is reported.",
+      "files": []
     }
   ]
 }

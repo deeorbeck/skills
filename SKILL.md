@@ -78,11 +78,13 @@ Before spending substantial work on generation, preflight the Lumina credentials
 6. Put reusable styling in `theme_css`.
 7. Put slide-specific styling in each slide's `css` only when useful.
 8. Add `contenteditable="true"` and `data-field="..."` to editable text.
-9. If the analysis says `needs_images: true`, read `references/image-sourcing.md`, search for suitable live images, validate each URL, and pass only validated image URLs into the slide HTML generation step.
-10. Use hosted image URLs for images.
-11. Publish with `POST /api/agent/presentations`.
-12. Return the Lumina URLs to the user.
-13. Offer to download the deck as PPTX [1:1] or PDF [1:1] into a local `slides/` folder if the user wants it.
+9. Read `references/image-sourcing.md` and create an image plan for the deck. For a full generated presentation, include validated real image URLs on the title slide and at least two content slides unless the user explicitly requested no images or the subject is truly image-hostile.
+10. Search for suitable live images, validate each URL, and pass only validated image URLs into the slide HTML generation step.
+11. Use hosted image URLs in `<img>` tags for the planned image slides.
+12. Before publishing, count image usage. If the deck has zero `<img>` tags and the user did not ask for an image-free deck, stop and add images before publishing.
+13. Publish with `POST /api/agent/presentations`.
+14. Return the Lumina URLs to the user.
+15. Offer to download the deck as PPTX [1:1] or PDF [1:1] into a local `slides/` folder if the user wants it.
 
 ## API Reference
 
@@ -97,6 +99,14 @@ Before publishing generated slides, read `references/lumina-slide-contract.md` a
 ## Image Sourcing And Validation
 
 Read `references/image-sourcing.md` whenever a deck or individual slide needs images.
+
+For full presentations created from a topic, images are expected by default. Do not use abstract CSS decorations as a substitute for all images. A normal deck should include:
+
+- One strong validated image on the title slide or opening section.
+- At least two additional validated images across content slides.
+- More images when the topic is visual, such as education, products, travel, people, history, health, real estate, food, sport, culture, or physical places.
+
+Use a no-image deck only when the user explicitly asks for no images, when the topic is strictly code/theory, or when image search fails after real validation attempts. If you publish a no-image deck, mention why in internal notes or metadata.
 
 Follow the Slaydplus image model:
 

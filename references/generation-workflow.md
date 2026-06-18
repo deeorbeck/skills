@@ -100,7 +100,9 @@ Every slide should have:
 
 ### 7. Source And Validate Images
 
-If `STEP_1_DEEP_ANALYSIS.md` returns `needs_images: true`, read `references/image-sourcing.md` before writing final HTML.
+Read `references/image-sourcing.md` before writing final HTML.
+
+For full generated presentations, create an image plan by default: one hero image plus at least two additional content-slide images. If the analysis returns `needs_images: false`, override it unless the user requested no images or the topic is strictly abstract/code/theory.
 
 Use the analysis `keywords` to search for relevant images. Validate each candidate URL with an HTTP check, follow redirects, and accept only public `2xx` image responses. Reject broken, private, login-gated, local, guessed, or `text/html` URLs.
 
@@ -146,6 +148,7 @@ Before publishing, inspect the deck against this checklist:
 - No slide has clipped text or overflow.
 - Editable text has `contenteditable="true"` and `data-field`.
 - Images, if used, were searched, validated, and inserted as hosted URLs.
+- Full generated decks include a hero image and at least two additional validated images unless there is a clear exception.
 - No image URL is hallucinated, private, local, expired, or broken.
 - No secrets or private URLs appear in the HTML.
 - The final response includes Lumina preview/editor/export URLs, or clearly says publishing is blocked.
