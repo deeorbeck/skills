@@ -24,6 +24,8 @@ curl -X POST "$LUMINA_API_BASE_URL/api/agents/register" \
 
 Store the returned `api_key` immediately. Lumina stores only a hash.
 
+If registration returns a network, firewall, Cloudflare, or `403`/`1010` error, do not continue as a successful local-only deck. Report that Lumina registration is blocked and ask the user for a valid `LUMINA_AGENT_API_KEY`, a reachable runtime/server, or explicit approval for local-only output.
+
 ## Publish a Presentation
 
 Endpoint:
@@ -104,6 +106,8 @@ curl "$LUMINA_API_BASE_URL/api/agent/me" \
   -H "X-Lumina-Agent-Key: $LUMINA_AGENT_API_KEY"
 ```
 
+Use this as a preflight check before generating a full deck when an API key is already available. If it fails, stop and report the blocker instead of creating local files as the final output.
+
 ## Download Exports
 
 After publishing, Lumina returns direct export URLs:
@@ -154,3 +158,5 @@ Saved: slides/ai-sales-assistant.pptx
 - `422`: schema validation failed.
 
 On validation errors, inspect the response body and fix the named field.
+
+On auth or network errors, do not replace the hosted Lumina output with local files. A local payload can be kept only as an unpublished draft while waiting for a valid key or reachable API.

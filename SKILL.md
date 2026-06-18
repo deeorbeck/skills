@@ -9,6 +9,8 @@ Use this skill to generate and publish a complete slide deck to Lumina through t
 
 Lumina does not generate the content for this endpoint. You, the agent, prepare complete slide content, design, HTML/CSS, and validated hosted image URLs, then ask Lumina to host the presentation and return preview, editor, document, PPTX, and PDF URLs.
 
+This skill is successful only when the presentation is published to Lumina and the user receives Lumina URLs. Local files are optional exports after a successful publish; they are not a replacement for the hosted preview.
+
 ## When To Use
 
 Use this skill when the task needs:
@@ -23,6 +25,23 @@ Use this skill when the task needs:
 
 Do not use this skill if the user only wants local files, a markdown outline, or a hand-written explanation without hosted presentation output.
 
+## Non-Negotiable Hosted Output
+
+The primary deliverable is a Lumina hosted presentation. Do not treat local PPTX, PDF, HTML, or JSON files as the final result unless the user explicitly asked for local-only output.
+
+If Lumina registration or publishing fails:
+
+1. Do not silently fall back to local-only generation.
+2. Do not present local PPTX/PDF/HTML files as the completed task.
+3. Report the exact blocker, such as missing `LUMINA_AGENT_API_KEY`, invalid key, network block, `403`, or Cloudflare `1010`.
+4. Ask the user for the next unblocker: a valid `LUMINA_AGENT_API_KEY`, a reachable `LUMINA_API_BASE_URL`, permission to retry from another runtime/server, or a request to create local files only.
+5. Keep any generated payload as a draft artifact only, clearly labelled as unpublished.
+
+Use local files only in two cases:
+
+- The user explicitly asks for local-only slides.
+- Lumina publish has already succeeded and the user then asks to download the Lumina export into `slides/`.
+
 ## Required Inputs
 
 Before generating and publishing, gather or create:
@@ -36,6 +55,8 @@ Before generating and publishing, gather or create:
 
 If there is no API key, register the agent first using `POST /api/agents/register`, then store the returned key as a secret. The full key is shown only once.
 
+Before spending substantial work on generation, preflight the Lumina credentials. If `LUMINA_AGENT_API_KEY` exists, call `GET /api/agent/me`. If no key exists, try `POST /api/agents/register`. If this preflight is blocked or returns an auth/network error, stop and ask for an unblocker instead of creating a local deck.
+
 ## Workflow
 
 ### If The User Already Provided Slide Code
@@ -43,23 +64,25 @@ If there is no API key, register the agent first using `POST /api/agents/registe
 1. Validate that every slide has complete HTML.
 2. Normalize each slide to `1920px` by `1080px`.
 3. Add `contenteditable="true"` and `data-field="..."` to text elements that should be editable in Lumina.
-4. Publish with `POST /api/agent/presentations`.
-5. Return the Lumina URLs to the user.
+4. Preflight Lumina authentication.
+5. Publish with `POST /api/agent/presentations`.
+6. Return the Lumina URLs to the user.
 
 ### If The User Wants A Presentation Created
 
 1. Read `references/generation-workflow.md`.
-2. Use the bundled Slaydplus prompts in `references/slaydplus-prompts/` as the generation standard.
-3. Parse the request, analyze the topic, create a design system, plan the slide outline, then generate slide HTML/CSS.
-4. Build every slide at `1920px` by `1080px`.
-5. Put reusable styling in `theme_css`.
-6. Put slide-specific styling in each slide's `css` only when useful.
-7. Add `contenteditable="true"` and `data-field="..."` to editable text.
-8. If the analysis says `needs_images: true`, read `references/image-sourcing.md`, search for suitable live images, validate each URL, and pass only validated image URLs into the slide HTML generation step.
-9. Use hosted image URLs for images.
-10. Publish with `POST /api/agent/presentations`.
-11. Return the Lumina URLs to the user.
-12. Offer to download the deck as PPTX or PDF into a local `slides/` folder if the user wants it.
+2. Preflight Lumina authentication before building the full deck.
+3. Use the bundled Slaydplus prompts in `references/slaydplus-prompts/` as the generation standard.
+4. Parse the request, analyze the topic, create a design system, plan the slide outline, then generate slide HTML/CSS.
+5. Build every slide at `1920px` by `1080px`.
+6. Put reusable styling in `theme_css`.
+7. Put slide-specific styling in each slide's `css` only when useful.
+8. Add `contenteditable="true"` and `data-field="..."` to editable text.
+9. If the analysis says `needs_images: true`, read `references/image-sourcing.md`, search for suitable live images, validate each URL, and pass only validated image URLs into the slide HTML generation step.
+10. Use hosted image URLs for images.
+11. Publish with `POST /api/agent/presentations`.
+12. Return the Lumina URLs to the user.
+13. Offer to download the deck as PPTX or PDF into a local `slides/` folder if the user wants it.
 
 ## API Reference
 
@@ -123,7 +146,7 @@ curl -X POST "$LUMINA_API_BASE_URL/api/agent/presentations" \
 
 ## Optional Download Offer
 
-After publishing, always offer a download as the next optional step. Do not download automatically unless the user explicitly asks.
+After publishing, always offer a download as the next optional step. Do not download automatically unless the user explicitly asks. Do not create local PPTX/PDF/HTML files before a successful Lumina publish unless the user explicitly requested local-only output.
 
 Use this wording pattern:
 
@@ -159,3 +182,21 @@ I can also download this presentation for you into `slides/` as PPTX or PDF. Tel
 ```
 
 Include the deck UUID and slide count when useful.
+
+## Failure Output Format
+
+If Lumina cannot be reached or rejects the request, respond with:
+
+```markdown
+I could not publish this deck to Lumina yet.
+
+Blocker: <specific error, status code, or missing variable>
+
+To continue, provide one of these:
+- A valid `LUMINA_AGENT_API_KEY`
+- A reachable `LUMINA_API_BASE_URL`
+- Permission to retry from a runtime/server that can access Lumina
+- Explicit approval to create local-only files instead
+```
+
+Do not list local files as the completed deliverable in this failure state.

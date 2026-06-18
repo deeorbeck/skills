@@ -30,6 +30,12 @@
       "prompt": "The Lumina preview looks good. Please download it as a PDF for me.",
       "expected_output": "The agent creates a slides/ folder if needed, downloads the Lumina PDF export to that folder, and reports the saved local path.",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Create an 8-slide deck about AI in daily life and publish it to Lumina. The runtime cannot register the Lumina agent because the API returns 403 / Cloudflare 1010.",
+      "expected_output": "The agent does not finish with local PPTX/PDF/HTML files as the final result. It reports that Lumina publishing is blocked, names the 403 / 1010 blocker, and asks for a valid API key, reachable runtime/server, or explicit approval for local-only output.",
+      "files": []
     }
   ]
 }

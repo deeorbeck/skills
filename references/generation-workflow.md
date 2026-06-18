@@ -36,7 +36,18 @@ Use `STEP_0_REQUEST_PARSER.md` as the mental contract for extracting:
 
 If the user gives a direct, clear request, do not over-question. Infer reasonable defaults from the prompt.
 
-### 2. Analyze The Deck
+### 2. Preflight Lumina Access
+
+Before building the full deck, verify that the hosted Lumina path is available.
+
+- If `LUMINA_AGENT_API_KEY` exists, call `GET /api/agent/me`.
+- If no key exists, register the agent with `POST /api/agents/register`.
+- If the request is blocked or rejected, stop and report the blocker.
+- Do not create local PPTX/PDF/HTML files as a substitute for Lumina publishing unless the user explicitly asked for local-only output.
+
+For this skill, success means Lumina returns hosted URLs.
+
+### 3. Analyze The Deck
 
 Use `STEP_1_DEEP_ANALYSIS.md` to decide:
 
@@ -50,7 +61,7 @@ Use `STEP_1_DEEP_ANALYSIS.md` to decide:
 
 This step prevents generic decks. The topic should drive the design system.
 
-### 3. Create A Design System
+### 4. Create A Design System
 
 Use `STEP_2_DESIGN_GENERATION.md` to create a coherent design system:
 
@@ -63,7 +74,7 @@ Use `STEP_2_DESIGN_GENERATION.md` to create a coherent design system:
 
 Convert the design system into global `theme_css` and reusable style decisions.
 
-### 4. Plan Slides
+### 5. Plan Slides
 
 Build a slide outline before writing HTML. For typical decks:
 
@@ -75,7 +86,7 @@ Build a slide outline before writing HTML. For typical decks:
 
 Respect the requested slide count. Use varied slide types: `title`, `content`, `list`, `two_column`, `comparison`, `quote`, `timeline`, `stats`, `end`.
 
-### 5. Generate Slide Content
+### 6. Generate Slide Content
 
 Use `STEP_5_CONTENT_GENERATION.md` for content density and editability rules.
 
@@ -87,7 +98,7 @@ Every slide should have:
 - editable text fields
 - image search context if an image is needed
 
-### 6. Source And Validate Images
+### 7. Source And Validate Images
 
 If `STEP_1_DEEP_ANALYSIS.md` returns `needs_images: true`, read `references/image-sourcing.md` before writing final HTML.
 
@@ -95,7 +106,7 @@ Use the analysis `keywords` to search for relevant images. Validate each candida
 
 Pass only validated image URLs into the slide-code generation step. This matches the Slaydplus rule: use provided image URLs only, never invent URLs. If no valid URL is available, generate the slide without `<img>` and use CSS visuals instead.
 
-### 7. Generate HTML/CSS
+### 8. Generate HTML/CSS
 
 Use `SLIDE_GENERATOR_CREATIVE.md` as the main slide-code standard.
 
@@ -103,7 +114,7 @@ Important adaptations for Lumina:
 
 Read `references/lumina-slide-contract.md` before publishing. It adapts the Slaydplus creative prompt output to the exact Lumina Agent Publish API contract.
 
-### 8. Publish To Lumina
+### 9. Publish To Lumina
 
 After generating all slide objects, publish with `POST /api/agent/presentations`.
 
@@ -121,6 +132,8 @@ Each slide should be shaped like:
 
 Put shared CSS in `theme_css`. Use per-slide `css` only when it improves clarity.
 
+If publishing fails after generation, clearly state that the deck is unpublished. Keep any JSON or HTML as draft payload only. Ask for a valid key, reachable API base URL, retry from another runtime/server, or explicit permission to create local-only files.
+
 ## Quality Bar
 
 Before publishing, inspect the deck against this checklist:
@@ -135,3 +148,4 @@ Before publishing, inspect the deck against this checklist:
 - Images, if used, were searched, validated, and inserted as hosted URLs.
 - No image URL is hallucinated, private, local, expired, or broken.
 - No secrets or private URLs appear in the HTML.
+- The final response includes Lumina preview/editor/export URLs, or clearly says publishing is blocked.

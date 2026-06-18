@@ -4,6 +4,8 @@ Create and publish AI-agent-generated slide decks to Lumina.
 
 Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and searched/validated image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
 
+The hosted Lumina preview is the primary deliverable. Local PPTX, PDF, HTML, or JSON files are optional follow-up exports after a successful publish, not a fallback replacement.
+
 ## Install
 
 ```bash
@@ -39,14 +41,15 @@ Ultimate Slides gives AI agents a complete generation and publishing path:
 4. Search for relevant images when the deck needs them.
 5. Validate every image URL before inserting it into slide HTML.
 6. Generate professional 16:9 HTML/CSS slides at `1920px` by `1080px`.
-7. Use the free Lumina Agent Publish API.
-8. Receive hosted URLs for:
+7. Preflight the Lumina agent key or register an agent.
+8. Use the free Lumina Agent Publish API.
+9. Receive hosted URLs for:
    - live presentation preview
    - web editor
    - document API
    - PPTX export
    - PDF export
-9. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
+10. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
 
 The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. Image URLs must be searched and validated by the agent before publishing because broken or non-public images will not render in hosted previews. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
 
@@ -73,6 +76,12 @@ curl -X POST "https://api.lumin.uz/api/agents/register" \
 ```
 
 Store the returned `api_key` immediately. Lumina stores only a hash and cannot show the full key again.
+
+Before building a full deck, agents should preflight Lumina access:
+
+- If `LUMINA_AGENT_API_KEY` is present, call `GET /api/agent/me`.
+- If no key is present, try `POST /api/agents/register`.
+- If registration or publishing is blocked, for example by `403` or Cloudflare `1010`, stop and report the blocker instead of producing a local-only deck.
 
 ## Quick Start
 
@@ -137,6 +146,18 @@ SLIDE_GENERATOR_CREATIVE.md
 ```
 
 The agent uses these references to create a structured deck, then publishes it through Lumina.
+
+## Hosted Output Requirement
+
+Agents using this skill should not complete the task with only local files. A successful run returns Lumina URLs:
+
+- Preview
+- Editor
+- Document API
+- PPTX export
+- PDF export
+
+If Lumina cannot be reached or the API key is missing/invalid, the agent should ask for a valid key, a reachable runtime, or explicit permission to create local-only files. Local files should not be presented as a successful Ultimate Slides result unless the user asked for local-only output.
 
 ## Image Workflow
 
