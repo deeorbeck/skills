@@ -2,7 +2,7 @@
 
 Create and publish AI-agent-generated slide decks to Lumina.
 
-Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and searched/validated image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX export, and PDF export.
+Ultimate Slides is a reusable agent skill for generating professional HTML/CSS slide decks and turning them into hosted presentation URLs. Your agent creates the slide content, design, layout, code, and searched/validated image URLs. Lumina hosts the deck and returns links for preview, editing, document access, PPTX [1:1] export, and PDF [1:1] export.
 
 The hosted Lumina preview is the primary deliverable. Local PPTX, PDF, HTML, or JSON files are optional follow-up exports after a successful publish, not a fallback replacement.
 
@@ -47,8 +47,8 @@ Ultimate Slides gives AI agents a complete generation and publishing path:
    - live presentation preview
    - web editor
    - document API
-   - PPTX export
-   - PDF export
+   - PPTX [1:1] export
+   - PDF [1:1] export
 10. Offer to download the finished presentation into a local `slides/` folder as PPTX or PDF when the user asks.
 
 The Lumina endpoint used by this skill does not generate AI content and does not deduct credits. The agent is responsible for slide text, design, code, and image URLs. Image URLs must be searched and validated by the agent before publishing because broken or non-public images will not render in hosted previews. The skill bundles the Slaydplus generation prompt pipeline so agents can create much stronger slide code before publishing.
@@ -154,8 +154,8 @@ Agents using this skill should not complete the task with only local files. A su
 - Preview
 - Editor
 - Document API
-- PPTX export
-- PDF export
+- PPTX [1:1] export
+- PDF [1:1] export
 
 If Lumina cannot be reached or the API key is missing/invalid, the agent should ask for a valid key, a reachable runtime, or explicit permission to create local-only files. Local files should not be presented as a successful Ultimate Slides result unless the user asked for local-only output.
 
@@ -184,6 +184,16 @@ See [`references/image-sourcing.md`](references/image-sourcing.md) for the compl
 - Never invent image URLs or use private/local/login-protected image URLs.
 - Avoid external JavaScript.
 - Never place secrets, private URLs, access tokens, or credentials in slide HTML.
+
+## Export Fidelity
+
+Use Lumina's `[1:1]` export path by default:
+
+- PPTX [1:1] renders each slide from the hosted HTML preview and inserts it as a full-slide image.
+- PDF [1:1] is generated from the screenshot-based PPTX.
+- This matches the browser/Lumina preview and avoids ugly layout drift from editable PPTX reconstruction.
+
+Only use editable/non-1:1 exports when the user explicitly asks for editable PowerPoint text and accepts lower visual fidelity.
 
 ## Files
 
@@ -230,10 +240,10 @@ Published to Lumina:
 - Preview: <view URL>
 - Editor: <edit URL>
 - Document API: <api_document URL>
-- PPTX export: <export_pptx URL>
-- PDF export: <export_pdf URL>
+- PPTX [1:1] export: <export_pptx URL>
+- PDF [1:1] export: <export_pdf URL>
 
-I can also download this presentation for you into `slides/` as PPTX or PDF. Tell me which format you want.
+I can also download this presentation for you into `slides/` as PPTX [1:1] or PDF [1:1]. Tell me which format you want.
 ```
 
 The download is not automatic. If the user asks for it, the agent should create `slides/`, download from Lumina, and report the saved local file path.

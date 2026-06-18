@@ -112,8 +112,10 @@ Use this as a preflight check before generating a full deck when an API key is a
 
 After publishing, Lumina returns direct export URLs:
 
-- `urls.export_pptx`
-- `urls.export_pdf`
+- `urls.export_pptx`: PPTX [1:1], screenshot-based and visually matched to the hosted preview.
+- `urls.export_pdf`: PDF [1:1], generated from the screenshot-based PPTX and visually matched to the hosted preview.
+
+Use these `[1:1]` exports by default for generated HTML/CSS decks. They preserve the Lumina/browser appearance. Do not use editable/non-1:1 exports unless the user explicitly prioritizes editability over visual fidelity.
 
 Do not download automatically. Offer the user a download first. If the user asks, save the selected format into a local `slides/` folder.
 
@@ -130,6 +132,15 @@ POST /api/documents/{uuid}/export/start?export_type=pptx
 POST /api/documents/{uuid}/export/start?export_type=pdf
 GET /api/export/status/{task_id}
 ```
+
+The endpoint also accepts Slaydplus-compatible aliases:
+
+```http
+POST /api/documents/{uuid}/export/start?export_type=pptx-screenshot
+POST /api/documents/{uuid}/export/start?export_type=pdf-screenshot
+```
+
+For Lumina Agent API responses, `export_pptx` and `export_pdf` already point to the preferred `[1:1]` export path.
 
 When the status is `completed`, download the returned `file_url`:
 
